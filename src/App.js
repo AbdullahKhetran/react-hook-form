@@ -1,26 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import "./styles.css";
 
 export default function App() {
+    const [successMsg, setSuccessMsg] = useState("");
     const {
         register,
         handleSubmit,
-        formState: { errors }
+        formState: { errors },
+        reset
     } = useForm();
 
     const onSubmit = (data) => {
         console.log(data);
+        setSuccessMsg("User registration is successful.");
+        reset();
     };
 
     return (
         <div className="App">
             <form onSubmit={handleSubmit(onSubmit)}>
+                {successMsg && <p className="success-msg">{successMsg}</p>}
+                <div className="form-control">
+                    <label>Username</label>
+                    <input
+                        type="text"
+                        {...register("username", {
+                            required: "Username is required."
+                        })}
+                    />
+                    {errors.username && (
+                        <p className="errorMsg">{errors.username.message}</p>
+                    )}
+                </div>
                 <div className="form-control">
                     <label>Email</label>
                     <input
                         type="text"
-                        name="email"
                         {...register("email", {
                             required: "Email is required.",
                             pattern: {
@@ -35,7 +51,6 @@ export default function App() {
                     <label>Password</label>
                     <input
                         type="password"
-                        name="password"
                         {...register("password", {
                             required: true,
                             validate: {
@@ -64,7 +79,7 @@ export default function App() {
                 </div>
                 <div className="form-control">
                     <label></label>
-                    <button type="submit">Login</button>
+                    <button type="submit">Register</button>
                 </div>
             </form>
         </div>
